@@ -8,6 +8,17 @@ const wss = new WebSocket.Server({ noServer: true });
 const port = process.env.PORT || 3001;
 
 const server = http.createServer((request, response) => {
+    // Add CORS headers
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    if (request.method === 'OPTIONS') {
+        response.writeHead(200);
+        response.end();
+        return;
+    }
+    
     response.writeHead(200, { 'Content-Type': 'text/plain' });
     response.end('okay');
 });
@@ -26,4 +37,4 @@ server.on('upgrade', (request, socket, head) => {
 
 server.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on http://0.0.0.0:${port}`);
-}); 
+});

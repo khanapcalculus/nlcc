@@ -4,12 +4,12 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/lccrtc/',
+  base: '/', // Changed from '/lccrtc/' to '/' for Render.com
   server: {
     host: true,
     proxy: {
       '/ws': {
-        target: 'ws://192.168.31.158:3001',
+        target: process.env.WEBSOCKET_URL || 'ws://localhost:3001', // Use environment variable
         ws: true,
       },
     },
