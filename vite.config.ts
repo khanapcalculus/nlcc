@@ -5,6 +5,15 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   base: '/lccrtc/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
   server: {
     host: true,
     proxy: {
