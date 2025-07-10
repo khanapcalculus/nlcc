@@ -6,11 +6,18 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   base: '/lccrtc/',
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     rollupOptions: {
-      input: resolve(__dirname, 'index.html'),
+      input: {
+        main: resolve(__dirname, 'index.html'),
+      },
       output: {
         assetFileNames: 'assets/[name].[hash][extname]',
         chunkFileNames: 'assets/[name].[hash].js',
