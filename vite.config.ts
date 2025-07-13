@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/lccrtc/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/rtc-whiteboard/' : '/',
   build: {
     outDir: 'dist'
   },
