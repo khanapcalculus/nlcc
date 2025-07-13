@@ -27,12 +27,18 @@ const yImages = doc.getArray<string>('images');
 const yShapes = doc.getArray<string>('shapes');
 const yTexts = doc.getArray<string>('texts');
 const yViewState = doc.getMap<number>('viewState');
-const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-// For production, replace 'your-public-wss-server' with your actual public WSS server domain or IP
-const wsHost = window.location.protocol === 'https:' ? 'your-public-wss-server' : '192.168.31.158';
-const wsPort = window.location.protocol === 'https:' ? '443' : '3001';
-const wsUrl = `${wsProtocol}//${wsHost}:${wsPort}`;
-const provider = new WebsocketProvider(wsUrl, 'whiteboard', doc);
+let provider: WebsocketProvider | null = null;
+if (window.location.hostname === 'localhost' || window.location.hostname === '192.168.31.158') {
+  // Local development: connect to local WebSocket server
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsHost = '192.168.31.158';
+  const wsPort = '3001';
+  const wsUrl = `${wsProtocol}//${wsHost}:${wsPort}`;
+  provider = new WebsocketProvider(wsUrl, 'whiteboard', doc);
+} else {
+  // Production: do not connect, show warning
+  console.warn('Real-time collaboration is only available on the local network.');
+}
 
 // Performance optimization: Throttle function with improved responsiveness for pen tool
 const throttle = (func: Function, limit: number) => {
