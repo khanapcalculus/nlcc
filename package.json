@@ -12,7 +12,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://khanapcalculus.github.io/vite/",
+  "homepage": "https://khanapcalculus.github.io/lccrtc/",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
