@@ -27,7 +27,12 @@ const yImages = doc.getArray<string>('images');
 const yShapes = doc.getArray<string>('shapes');
 const yTexts = doc.getArray<string>('texts');
 const yViewState = doc.getMap<number>('viewState');
-const provider = new WebsocketProvider('ws://192.168.31.158:3001', 'whiteboard', doc);
+const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+// For production, replace 'your-public-wss-server' with your actual public WSS server domain or IP
+const wsHost = window.location.protocol === 'https:' ? 'your-public-wss-server' : '192.168.31.158';
+const wsPort = window.location.protocol === 'https:' ? '443' : '3001';
+const wsUrl = `${wsProtocol}//${wsHost}:${wsPort}`;
+const provider = new WebsocketProvider(wsUrl, 'whiteboard', doc);
 
 // Performance optimization: Throttle function with improved responsiveness for pen tool
 const throttle = (func: Function, limit: number) => {
