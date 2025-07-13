@@ -674,27 +674,6 @@ const Whiteboard = () => {
                     imageSmoothingEnabled={true}
                     hitGraphEnabled={true}
                 >
-                    {/* Render Lines (behind everything else) */}
-                    {lines.map((line, index) => (
-                        <Line
-                            key={line.id || `line-${index}`}
-                            points={line.points}
-                            stroke={line.color || '#000000'}
-                            strokeWidth={line.strokeWidth || 2.5}
-                            tension={0.1} // Further reduced tension for smoother rapid drawing
-                            lineCap="round"
-                            lineJoin="round"
-                            globalCompositeOperation="source-over"
-                            perfectDrawEnabled={false} // Performance optimization
-                            listening={false} // Performance optimization
-                            shadowForStrokeEnabled={false} // Performance optimization
-                            hitStrokeWidth={0} // Performance optimization
-                            bezier={false} // Disable Konva's bezier since we're doing our own smoothing
-                            closed={false}
-                            fillEnabled={false}
-                        />
-                    ))}
-
                     {/* Render Images */}
                     {images.map((imageItem) => {
                         const img = imageElements.get(imageItem.id);
@@ -893,6 +872,34 @@ const Whiteboard = () => {
                             }}
                         />
                     )}
+                </Layer>
+                
+                {/* Separate Layer for Drawing on Top of Everything */}
+                <Layer
+                    listening={false}
+                    perfectDrawEnabled={false}
+                    imageSmoothingEnabled={true}
+                >
+                    {/* Render Lines on top of everything */}
+                    {lines.map((line, index) => (
+                        <Line
+                            key={`top-${line.id || `line-${index}`}`}
+                            points={line.points}
+                            stroke={line.color || '#000000'}
+                            strokeWidth={line.strokeWidth || 2.5}
+                            tension={0.1}
+                            lineCap="round"
+                            lineJoin="round"
+                            globalCompositeOperation="source-over"
+                            perfectDrawEnabled={false}
+                            listening={false}
+                            shadowForStrokeEnabled={false}
+                            hitStrokeWidth={0}
+                            bezier={false}
+                            closed={false}
+                            fillEnabled={false}
+                        />
+                    ))}
                 </Layer>
             </Stage>
         </div>

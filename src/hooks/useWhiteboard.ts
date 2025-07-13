@@ -27,7 +27,8 @@ const yImages = doc.getArray<string>('images');
 const yShapes = doc.getArray<string>('shapes');
 const yTexts = doc.getArray<string>('texts');
 const yViewState = doc.getMap<number>('viewState');
-const provider = new WebsocketProvider('ws://192.168.31.158:3001', 'whiteboard', doc);
+const wsHost = window.location.hostname;
+const provider = new WebsocketProvider(`ws://${wsHost}:3001`, 'whiteboard', doc);
 
 // Performance optimization: Throttle function with improved responsiveness for pen tool
 const throttle = (func: Function, limit: number) => {
