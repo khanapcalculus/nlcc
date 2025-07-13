@@ -36,8 +36,8 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '19
   const wsUrl = `${wsProtocol}//${wsHost}:${wsPort}`;
   provider = new WebsocketProvider(wsUrl, 'whiteboard', doc);
 } else {
-  // Production: do not connect, show warning
-  console.warn('Real-time collaboration is only available on the local network.');
+  // Production: use public y-websocket demo server
+  provider = new WebsocketProvider('wss://demos.yjs.dev', 'whiteboard', doc);
 }
 
 // Performance optimization: Throttle function with improved responsiveness for pen tool

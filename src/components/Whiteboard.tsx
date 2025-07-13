@@ -668,33 +668,13 @@ const Whiteboard = () => {
                 listening={true}
                 perfectDrawEnabled={false} // Performance optimization for smoother drawing
             >
+                {/* Images and shapes layer */}
                 <Layer
                     listening={true}
                     perfectDrawEnabled={false}
                     imageSmoothingEnabled={true}
                     hitGraphEnabled={true}
                 >
-                    {/* Render Lines (behind everything else) */}
-                    {lines.map((line, index) => (
-                        <Line
-                            key={line.id || `line-${index}`}
-                            points={line.points}
-                            stroke={line.color || '#000000'}
-                            strokeWidth={line.strokeWidth || 2.5}
-                            tension={0.1} // Further reduced tension for smoother rapid drawing
-                            lineCap="round"
-                            lineJoin="round"
-                            globalCompositeOperation="source-over"
-                            perfectDrawEnabled={false} // Performance optimization
-                            listening={false} // Performance optimization
-                            shadowForStrokeEnabled={false} // Performance optimization
-                            hitStrokeWidth={0} // Performance optimization
-                            bezier={false} // Disable Konva's bezier since we're doing our own smoothing
-                            closed={false}
-                            fillEnabled={false}
-                        />
-                    ))}
-
                     {/* Render Images */}
                     {images.map((imageItem) => {
                         const img = imageElements.get(imageItem.id);
@@ -836,7 +816,28 @@ const Whiteboard = () => {
                             />
                         );
                     })}
-
+                </Layer>
+                {/* Pen/lines layer (always on top) */}
+                <Layer>
+                    {lines.map((line, index) => (
+                        <Line
+                            key={line.id || `line-${index}`}
+                            points={line.points}
+                            stroke={line.color || '#000000'}
+                            strokeWidth={line.strokeWidth || 2.5}
+                            tension={0.1}
+                            lineCap="round"
+                            lineJoin="round"
+                            globalCompositeOperation="source-over"
+                            perfectDrawEnabled={false}
+                            listening={false}
+                            shadowForStrokeEnabled={false}
+                            hitStrokeWidth={0}
+                            bezier={false}
+                            closed={false}
+                            fillEnabled={false}
+                        />
+                    ))}
                     {/* Render Eraser Path */}
                     {tool === 'eraser' && eraserState.isErasing && eraserState.eraserPath.length > 2 && (
                         <Line
@@ -851,49 +852,48 @@ const Whiteboard = () => {
                             perfectDrawEnabled={false}
                         />
                     )}
-
-                    {/* Transformer for selection */}
-                    {tool === 'select' && (
-                        <Transformer
-                            ref={transformerRef}
-                            onTransformEnd={onTransformEnd}
-                            onTransform={(e) => {
-                                // Don't update during transform, only on transform end
-                                // This prevents the jumping issue
-                            }}
-                            onDragEnd={onTransformEnd}
-                            boundBoxFunc={(oldBox, newBox) => {
-                                // Limit resize to prevent negative dimensions
-                                if (newBox.width < 5 || newBox.height < 5) {
-                                    return oldBox;
-                                }
-                                return newBox;
-                            }}
-                            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'middle-left', 'middle-right', 'top-center', 'bottom-center']}
-                            borderEnabled={true}
-                            anchorSize={24}
-                            anchorStroke="#007bff"
-                            anchorFill="#ffffff"
-                            anchorStrokeWidth={3}
-                            anchorCornerRadius={6}
-                            borderStroke="#007bff"
-                            borderStrokeWidth={2}
-                            borderDash={[5, 5]}
-                            keepRatio={false}
-                            centeredScaling={false}
-                            ignoreStroke={true}
-                            useSingleNodeRotation={false}
-                            shouldOverdrawWholeArea={false}
-                            flipEnabled={false}
-                            resizeEnabled={true}
-                            rotateEnabled={true}
-                            anchorDragBoundFunc={(oldPos, newPos) => {
-                                // Allow free movement of anchors
-                                return newPos;
-                            }}
-                        />
-                    )}
                 </Layer>
+                {/* Transformer for selection, etc. */}
+                {tool === 'select' && (
+                    <Transformer
+                        ref={transformerRef}
+                        onTransformEnd={onTransformEnd}
+                        onTransform={(e) => {
+                            // Don't update during transform, only on transform end
+                            // This prevents the jumping issue
+                        }}
+                        onDragEnd={onTransformEnd}
+                        boundBoxFunc={(oldBox, newBox) => {
+                            // Limit resize to prevent negative dimensions
+                            if (newBox.width < 5 || newBox.height < 5) {
+                                return oldBox;
+                            }
+                            return newBox;
+                        }}
+                        enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'middle-left', 'middle-right', 'top-center', 'bottom-center']}
+                        borderEnabled={true}
+                        anchorSize={24}
+                        anchorStroke="#007bff"
+                        anchorFill="#ffffff"
+                        anchorStrokeWidth={3}
+                        anchorCornerRadius={6}
+                        borderStroke="#007bff"
+                        borderStrokeWidth={2}
+                        borderDash={[5, 5]}
+                        keepRatio={false}
+                        centeredScaling={false}
+                        ignoreStroke={true}
+                        useSingleNodeRotation={false}
+                        shouldOverdrawWholeArea={false}
+                        flipEnabled={false}
+                        resizeEnabled={true}
+                        rotateEnabled={true}
+                        anchorDragBoundFunc={(oldPos, newPos) => {
+                            // Allow free movement of anchors
+                            return newPos;
+                        }}
+                    />
+                )}
             </Stage>
         </div>
     );
